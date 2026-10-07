@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>coupang link</title>
+<meta name="theme-color" content="#c82d2d">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="link">
+<style>
+  :root { --red:#c82d2d; --ink:#1c2230; --muted:#6b7383; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    background:#f5f6f8; color:var(--ink);
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; padding:28px 20px; gap:22px; text-align:center;
+  }
+  .mark { width:168px; height:168px; display:block; }
+  h1 { font-size:22px; font-weight:800; letter-spacing:-.01em; }
+  p.sub { font-size:15px; color:var(--muted); line-height:1.55; }
+  .go {
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; max-width:340px; padding:19px 24px; border:0; border-radius:16px;
+    background:var(--red); color:#fff; font-size:18px; font-weight:800;
+    box-shadow:0 10px 24px rgba(200,45,45,.28); cursor:pointer;
+  }
+  .go:active { transform:translateY(1px); }
+  .card {
+    width:100%; max-width:340px; background:#fff; border:1px solid #e6e9ef;
+    border-radius:16px; padding:16px 18px; text-align:left;
+  }
+  .card h2 { font-size:14px; font-weight:800; margin-bottom:10px; color:var(--red); }
+  .card ol { margin-left:18px; font-size:13.5px; color:#3d4657; line-height:1.75; }
+  .note { font-size:12.5px; color:#8b93a3; line-height:1.6; max-width:340px; }
+  .ok { color:#1a8f4a; font-weight:700; }
+</style>
+</head>
+<body>
+  <img class="mark" src="icon-192.png" alt="coupang link">
+  <h1>coupang&nbsp;link</h1>
+  <p class="sub">가족·지인 전용 쇼핑 링크입니다.<br>아래 버튼을 누르면 쿠팡으로 이동합니다.</p>
+
+  <button class="go" id="go">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M5 12h12m0 0-5-5m5 5-5 5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    쿠팡 열기
+  </button>
+
+  <div class="card" id="installCard" hidden>
+    <h2>홈 화면에 추가하기</h2>
+    <ol id="installSteps">
+      <li>브라우저 우측 상단 <b>⋮</b> (또는 공유 버튼) 누르기</li>
+      <li><b>홈 화면에 추가</b> 선택</li>
+      <li>이름 확인 후 <b>추가</b> — 아이콘이 생깁니다</li>
+    </ol>
+  </div>
+
+  <p class="note">
+    ※ 이 링크는 쿠팡 파트너스 활동의 일환으로, 이를 통한 구매 시 일정액의 수수료를 받을 수 있습니다.<br>
+    <span class="ok">설치형 앱이 아니라서 보안 경고가 없습니다.</span>
+  </p>
+
+<script>
+  var URL_TARGET = "https://link.coupang.com/a/hzTXDSK3EG";
+
+  function openTarget() { location.href = URL_TARGET; }
+  document.getElementById("go").addEventListener("click", openTarget);
+
+  // 자동 이동은 첫 방문에만 (사용자가 버튼을 누르게 하는 편이 안전)
+  var params = new URLSearchParams(location.search);
+  if (params.get("auto") === "1") { setTimeout(openTarget, 350); }
+
+  // 홈 화면에 추가 안내 (이미 설치된 상태면 숨김)
+  var standalone = window.matchMedia("(display-mode: standalone)").matches
+                 || window.navigator.standalone === true;
+  if (!standalone) document.getElementById("installCard").hidden = false;
+
+  // 서비스워커 (오프라인 셸)
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+</script>
+</body>
+</html>
